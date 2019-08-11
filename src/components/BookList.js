@@ -8,11 +8,15 @@ import BookActions from '../actions/bookActions';
 export class BookList extends React.Component{
 
     createBookRow(book){
+        const authFirstName = book.first_name == null ? "" : book.first_name;
+        const authLastName = book.last_name == null ? "" : book.last_name;
+
         return (
-            <tr key={book.id}>
-                <td> {book.id} </td>
+            <tr key={book.book_id}>
                 <td> {book.title} </td>
-                <td> {book.author} </td>
+                <td> {authFirstName + " " + authLastName} </td>
+                <td><button type="button" onClick={ () => this.updateBook(book)}>Update</button></td>
+                <td><button type="button">Delete</button></td>
             </tr>
         );
     }
@@ -21,15 +25,22 @@ export class BookList extends React.Component{
         BookActions.readBooks();
     }
 
+    updateBook(book){
+        BookActions.getUpdateBookDetails(book);
+    }
+
+    addBook(){
+        BookActions.createBook();
+    }
+
     render() {
         return(
-            <div>
-                <h1>Books</h1>
-                <table className="table">
+            <div>     
+                <h1>Books</h1>                            
+                <table className="table">                   
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
+                        <tr>                            
+                            <th>Title <button type="button" onClick={ this.addBook }>Add Book</button></th>
                             <th>Author</th>
                         </tr>
                     </thead>
