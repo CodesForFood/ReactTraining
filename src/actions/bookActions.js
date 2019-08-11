@@ -63,18 +63,31 @@ const BooksActions = {
                 //Work around since nodejs cant return the book object
                 book.book_id = resp.data.insertId;
                 const resBook = book;
-                console.log(resp);
                 Dispatcher.dispatch({
                     actionType: "added_book_success",
                     data: resBook
-                })
+                });
             })
             .catch((err) => {
                 console.log(err);
             });                
+    },
+    deleteBook: function(book){
+        var isOK = confirm("You will delete this book.");
+
+        if(isOK){
+            Axios.delete("http://localhost:3000/book/"+ book.book_id)
+                .then(resp => {
+                    Dispatcher.dispatch({
+                        actionType: "delete_book_success",
+                        data: book
+                    });
+                })
+                .catch( err => {
+                    console.log(err);
+                });
+        }
     }
-
-
 }
 
 module.exports = BooksActions;

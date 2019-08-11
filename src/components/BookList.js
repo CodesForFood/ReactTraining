@@ -15,18 +15,22 @@ export class BookList extends React.Component{
             <tr key={book.book_id}>
                 <td> {book.title} </td>
                 <td> {authFirstName + " " + authLastName} </td>
-                <td><button type="button" onClick={ () => this.updateBook(book)}>Update</button></td>
-                <td><button type="button">Delete</button></td>
+                <td><button type="button" onClick={ () => this.updateBook(book) }>Update</button></td>
+                <td><button type="button" onClick={ () => this.deleteBook(book) }>Delete</button></td>
             </tr>
         );
     }
 
-    componentWillMount(){
+    componentDidMount(){
         BookActions.readBooks();
     }
 
     updateBook(book){
         BookActions.getUpdateBookDetails(book);
+    }
+
+    deleteBook(book){
+        BookActions.deleteBook(book);
     }
 
     addBook(){

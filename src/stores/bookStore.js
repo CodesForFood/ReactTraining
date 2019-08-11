@@ -27,8 +27,13 @@ class BookStoreClass extends EventEmitter{
     }
 
     updateBook(book){
-        let index = _bookStore.books.findIndex((elem) => { return elem.book_id === book.book_id});
+        const index = _bookStore.books.findIndex((elem) => { return elem.book_id === book.book_id});
         _bookStore.books[index] = book;        
+    }
+
+    deleteBook(book){
+        const newBooks = _bookStore.books.filter(elem => {return elem.book_id !== book.book_id});
+        _bookStore.books = newBooks;
     }
 
 }
@@ -50,6 +55,10 @@ Dispatcher.register( (action) => {
             _bookStore.books.push(action.data);
             BookStore.emitChange();
             break;
+        case 'delete_book_success':
+            BookStore.deleteBook(action.data);
+            BookStore.emitChange();
+            break;            
         default:
             return;
     }

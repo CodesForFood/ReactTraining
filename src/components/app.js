@@ -30,7 +30,7 @@ export class App extends React.Component{
         );
     }
 
-    componentWillMount(){
+    componentDidMount(){
         BookStore.addChangeListener(this._onBookChange.bind(this));
     }
 
