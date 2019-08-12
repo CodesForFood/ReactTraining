@@ -7,20 +7,6 @@ import BookActions from '../actions/bookActions';
 
 export class BookList extends React.Component{
 
-    createBookRow(book){
-        const authFirstName = book.first_name == null ? "" : book.first_name;
-        const authLastName = book.last_name == null ? "" : book.last_name;
-
-        return (
-            <tr key={book.book_id}>
-                <td> {book.title} </td>
-                <td> {authFirstName + " " + authLastName} </td>
-                <td><button type="button" onClick={ () => this.updateBook(book) }>Update</button></td>
-                <td><button type="button" onClick={ () => this.deleteBook(book) }>Delete</button></td>
-            </tr>
-        );
-    }
-
     componentDidMount(){
         BookActions.readBooks();
     }
@@ -36,6 +22,20 @@ export class BookList extends React.Component{
     addBook(){
         BookActions.createBook();
     }
+
+    createBookRow(book){
+        const authFirstName = book.first_name == null ? "" : book.first_name;
+        const authLastName = book.last_name == null ? "" : book.last_name;
+
+        return (
+            <tr key={book.book_id}>
+                <td> {book.title} </td>
+                <td> {authFirstName + " " + authLastName} </td>
+                <td><button type="button" onClick={ () => this.updateBook(book) }>Update</button></td>
+                <td><button type="button" onClick={ () => this.deleteBook(book) }>Delete</button></td>
+            </tr>
+        );
+    }   
 
     render() {
         return(

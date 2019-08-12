@@ -20,7 +20,7 @@ const BooksActions = {
     },
     updateBook : function(book){
         Axios.put("http://localhost:3000/book", book)
-            .then((resp) => {
+            .then(() => {
                     Dispatcher.dispatch({
                     actionType: "update_book_success",
                     data: book
@@ -77,7 +77,7 @@ const BooksActions = {
 
         if(isOK){
             Axios.delete("http://localhost:3000/book/"+ book.book_id)
-                .then(resp => {
+                .then(() => {
                     Dispatcher.dispatch({
                         actionType: "delete_book_success",
                         data: book

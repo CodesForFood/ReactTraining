@@ -14,6 +14,7 @@ export class Header extends React.Component{
                     <ul className="nav navbar-nav">
                         <li><Link to="/" replace>Home</Link></li>
                         <li><Link to="/books" replace>Books</Link></li>
+                        <li><Link to="/authors" replace>Authors</Link></li>
                     </ul>
                 </div>
             </nav>
