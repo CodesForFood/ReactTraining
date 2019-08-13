@@ -18,8 +18,26 @@ export class App extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            bookList:[],
-            authorList:[]
+            bookState: {
+                bookList:[],
+                bookErr: {
+                    show: false,
+                    msg: ""
+                },
+                popUp: {
+                    togglePopup: false,
+                    method: "",
+                    book: {}
+                }
+                
+            },
+            authorState: {
+                authorList:[],
+                authErr: {
+                    show: false,
+                    msg: ""
+                }
+            }           
         };
     }
 
@@ -29,28 +47,75 @@ export class App extends React.Component{
                 <Header />
                 <Switch>
                     <Route exact path='/' component={Home}/>
-                    <Route path='/books' render={(props) => (<Books {...props} bookList={this.state.bookList} />)}/>
-                    <Route path='/authors' render={ (props) => (<Authors {...props} authorList={this.state.authorList} />)}/>
+                    <Route path='/books' render={(props) => (<Books {...props} bookState={this.state.bookState}/>)}/>
+                    <Route path='/authors' render={ (props) => (<Authors {...props} authorState={this.state.authorState} />)}/>
                 </Switch>
             </div>
         );
     }
 
+    addBookListeners(){
+        BookStore.addBookListeners(
+            this._onBookChange.bind(this),
+            this._onBookError.bind(this), 
+            this._onToggleBookPopup.bind(this) 
+        );              
+    }
+
+    removeBookListeners(){
+        BookStore.removeBookListeners(
+            this._onBookChange.bind(this),
+            this._onBookError.bind(this), 
+            this._onToggleBookPopup.bind(this) 
+        );    
+    }
+
+    addAuthorListeners(){
+        AuthorStore.addChangeListener(this._onAuthorChange.bind(this));     
+        AuthorStore.addErrorListener(this._onAuthorError.bind(this));
+    }
+
+    removeAuthorListeners(){
+        AuthorStore.removeChangeListener(this._onAuthorChange.bind(this));     
+        AuthorStore.removeErrorListener(this._onAuthorError.bind(this));
+    }
+
     componentDidMount(){
-        BookStore.addChangeListener(this._onBookChange.bind(this));
-        AuthorStore.addChangeListener(this._onAuthorChange.bind(this));
+       this.addBookListeners();
+       this.addAuthorListeners();
+     
     }
 
     componentWillUnmount(){
-        BookStore.removeChangeListener(this._onBookChange.bind(this));
-        AuthorStore.removeChangeListener(this._onAuthorChange.bing(this));
+       this.removeBookListeners(); 
+       this.removeAuthorListeners();        
     }
 
+    _onToggleBookPopup(){
+        const newState = this.state.bookState;
+        newState.popUp = BookStore.getPopup();
+        newState.popUp.togglePopup = !newState.popUp.togglePopup;
+        this.setState({ newState });
+    }
+
+    _onBookError(){
+        const newState = this.state.bookState;
+        newState.bookErr = BookStore.getError();
+        this.setState({ newState });
+    }  
+
     _onBookChange(){
-        this.setState({bookList: BookStore.getAllBooks()});
+        const newState = this.state.bookState;
+        newState.bookList = BookStore.getAllBooks();
+        this.setState({ newState });     
+    }
+
+
+    _onAuthorError(){
+        this.setState({authorState: {authErr: AuthorStore.getError()}});
     }
 
     _onAuthorChange(){
-        this.setState({authorList: AuthorStore.getAllAuthors()});
+        this.setState({authorState: {authorList: AuthorStore.getAllAuthors()}});
     }
 }

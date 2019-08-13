@@ -9,12 +9,13 @@ export class Authors extends React.Component{
     render() {
         return(
             <div>
-                <AuthorList authorList = {this.props.authorList} />
+                <AuthorList authorList = {this.props.authorList} authErr={this.props.authErr} />
             </div>
         );
     }
 }
 
 Authors.propTypes = {
-    authorList: PropTypes.array.isRequired
+    authorList: PropTypes.array.isRequired,
+    authErr: PropTypes.object.isRequired
 };

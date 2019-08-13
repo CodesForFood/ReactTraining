@@ -9,12 +9,12 @@ export class Books extends React.Component{
     render() {
         return(
             <div>
-                <BookList bookList = {this.props.bookList} />
+                <BookList bookState={this.props.bookState}/>
             </div>
         );
     }
 }
 
 Books.propTypes = {
-    bookList: PropTypes.array.isRequired
+    bookState: PropTypes.object.isRequired    
 };

@@ -13,7 +13,10 @@ const AuthorActions = {
                 });
             })
             .catch( (err) =>{
-                console.log(err);
+                Dispatcher.dispatch({
+                    actionType: 'show_error',
+                    data: err.message
+                });   
             });               
     },
     getNewAuthorDetails : function() {
@@ -42,7 +45,10 @@ const AuthorActions = {
                  });
             })
             .catch((err) => {
-                console.log(err);
+                Dispatcher.dispatch({
+                    actionType: 'show_error',
+                    data: err.message
+                });   
             });
     },
     updateAuthorDetails: function(author) {
@@ -66,7 +72,10 @@ const AuthorActions = {
                 });
             })
             .catch(err =>{
-                console.log(err);
+                Dispatcher.dispatch({
+                    actionType: 'show_error',
+                    data: err.message
+                });   
             })
     },
     deleteAuthor: function(author){
@@ -81,7 +90,10 @@ const AuthorActions = {
                     });
                 })
                 .catch(err => {
-                    console.log(err);
+                    Dispatcher.dispatch({
+                        actionType: 'show_error',
+                        data: err.message
+                    });   
                 })
         }
     }

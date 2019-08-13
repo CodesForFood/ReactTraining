@@ -15,66 +15,82 @@ const BooksActions = {
                 });
             })
             .catch( (err) =>{
-                console.log(err);
+                Dispatcher.dispatch({
+                    actionType: 'show_error',
+                    data: err.message
+                });
             });               
     },
     updateBook : function(book){
         Axios.put("http://localhost:3000/book", book)
-            .then(() => {
+            .then(() => {                
+                if(book.author != 0 && book.author !== null){
+                    this.getAuthorOfBook(book, (newBook) => {
+                        Dispatcher.dispatch({
+                            actionType: "update_book_success",
+                            data: newBook
+                        });
+                    });  
+                }
+                else{
                     Dispatcher.dispatch({
-                    actionType: "update_book_success",
-                    data: book
-                });
+                        actionType: "update_book_success",
+                        data: book
+                    });
+                }                                         
             })
-            .catch((err) => {
-                //do update_book_error action
-                console.log(err);
+            .catch((err) => {               
+                Dispatcher.dispatch({
+                    actionType: 'show_error',
+                    data: err.message
+                });                
             });
     },
-    getUpdateBookDetails : function(book){
-        const name = prompt("Whats the new name of the book?", book.title);
-        const author = prompt("What is the new Author id?", book.author);
-
-        const newBook = {
-            book_id: book.book_id,
-            title: name,
-            author: author
-        }
-
-        this.updateBook(newBook);
-    },
-    createBook : function (){
-        const name = prompt("What is the title of the new book?");
-        const authorId = prompt("What is the Authors of this book id?");
-
-        const newBook = {
-            title: name,
-            author: authorId
-        }
-
-        if(newBook.title){
-            this.addBook(newBook);
-        }
-       
-    },
+    getAuthorOfBook : function(book, callback) {
+        Axios.get('http://localhost:3000/author/' + book.author)
+            .then((resp) => {            
+                book.first_name = resp.data[0].first_name;
+                book.last_name = resp.data[0].last_name;
+                callback(book);
+            })
+            .catch((err) => {              
+                Dispatcher.dispatch({
+                    actionType: 'show_error',
+                    data: err.message
+                });   
+            });
+    },    
     addBook: function (book) {
         Axios.post("http://localhost:3000/book", book)
             .then(resp => {
                 //Work around since nodejs cant return the book object
                 book.book_id = resp.data.insertId;
                 const resBook = book;
-                Dispatcher.dispatch({
-                    actionType: "added_book_success",
-                    data: resBook
-                });
+                if(book.author != 0 && book.author !== null){
+                    this.getAuthorOfBook(resBook, (newBook) =>{
+                        Dispatcher.dispatch({
+                            actionType: "added_book_success",
+                            data: newBook
+                        });
+                    }); 
+                }
+                else{
+                    Dispatcher.dispatch({
+                        actionType: "added_book_success",
+                        data: resBook
+                    });
+                }
+                              
             })
             .catch((err) => {
-                console.log(err);
+                Dispatcher.dispatch({
+                    actionType: 'show_error',
+                    data: err.message
+                });   
             });                
     },
     deleteBook: function(book){
         var isOK = confirm("You will delete this book.");
-
         if(isOK){
             Axios.delete("http://localhost:3000/book/"+ book.book_id)
                 .then(() => {
@@ -84,9 +100,24 @@ const BooksActions = {
                     });
                 })
                 .catch( err => {
-                    console.log(err);
+                    Dispatcher.dispatch({
+                        actionType: 'show_error',
+                        data: err.message
+                    });   
                 });
         }
+    },
+    closePopup: function(){
+        Dispatcher.dispatch({
+            actionType: 'close_popup',             
+        });
+    },
+    showPopup: function(method, book) {
+        Dispatcher.dispatch({
+            actionType: 'show_popup',
+            method: method,
+            data: book
+        });
     }
 }
 

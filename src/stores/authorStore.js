@@ -2,9 +2,16 @@ import Dispatcher from '../dispatcher/appDispatcher';
 import {EventEmitter} from 'events';
 
 const CHANGE_EVENT = 'change';
+const ERROR = 'error';
 
 let _authorStore = {
-  authors: []
+  authors: [],
+  
+};
+
+let _authErr = {
+    show: "none",
+    msg: ""
 };
 
 class AuthorStoreClass extends EventEmitter{
@@ -19,6 +26,22 @@ class AuthorStoreClass extends EventEmitter{
 
     emitChange(){
         this.emit(CHANGE_EVENT);
+    }
+
+    addErrorListener(callback){
+        this.on(ERROR, callback);
+    }
+
+    removeErrorListener(callback){
+        this.removeListener(ERROR, callback);
+    }
+
+    emitError(){
+        this.emit(ERROR);
+    }
+
+    getError(){
+        return _authErr;
     }
 
     getAllAuthors(){
@@ -58,6 +81,12 @@ Dispatcher.register( (action) => {
             AuthorStore.deleteAuthor(action.data);
             AuthorStore.emitChange();
             break
+        case 'show_error':
+            _authErr.msg = action.data;
+            _authErr.show = "block";
+            AuthorStore.emitError();
+            AuthorStore.emitChange(); 
+            break;
         default:
             return;
 

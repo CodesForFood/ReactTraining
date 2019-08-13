@@ -23,10 +23,17 @@ export class AuthorList extends React.Component {
         );
     }   
 
+    ErrorComp(authErr){  
+        return (
+            <h3 style={{display: authErr.show}}>{authErr.show}</h3>
+        )
+    }
+
     render() {
         return(
             <div>     
                 <h1>Authors</h1>      
+                {this.ErrorComp(this.props.authErr)}
                 <button type="button" onClick={ () => AuthorActions.getNewAuthorDetails() } >Add Author</button>                      
                 <table className="table">                   
                     <thead>
@@ -46,5 +53,6 @@ export class AuthorList extends React.Component {
 }
 
 AuthorList.propTypes = {
-    authorList: PropTypes.array.isRequired
+    authorList: PropTypes.array.isRequired,
+    authErr: PropTypes.object.isRequired
 };
