@@ -36,6 +36,11 @@ export class App extends React.Component{
                 authErr: {
                     show: false,
                     msg: ""
+                },
+                popUp: {
+                    togglePopup: false,
+                    method: "",
+                    author: {}
                 }
             }           
         };
@@ -70,14 +75,22 @@ export class App extends React.Component{
         );    
     }
 
-    addAuthorListeners(){
-        AuthorStore.addChangeListener(this._onAuthorChange.bind(this));     
-        AuthorStore.addErrorListener(this._onAuthorError.bind(this));
-    }
+    
 
+    addAuthorListeners(){
+        AuthorStore.addAuthorListeners(
+            this._onAuthorChange.bind(this),
+            this._onAuthorError.bind(this),
+            this._onToggleAuthorPopup.bind(this)
+        )
+
+    }
     removeAuthorListeners(){
-        AuthorStore.removeChangeListener(this._onAuthorChange.bind(this));     
-        AuthorStore.removeErrorListener(this._onAuthorError.bind(this));
+        AuthorStore.removeAuthorListeners(
+            this._onAuthorChange.bind(this),
+            this._onAuthorError.bind(this),
+            this._onToggleAuthorPopup.bind(this)
+        )      
     }
 
     componentDidMount(){
@@ -112,10 +125,21 @@ export class App extends React.Component{
 
 
     _onAuthorError(){
-        this.setState({authorState: {authErr: AuthorStore.getError()}});
+        const newState = this.state.authorState;
+        newState.authErr = AuthorStore.getError();
+        this.setState({ newState });
     }
 
     _onAuthorChange(){
-        this.setState({authorState: {authorList: AuthorStore.getAllAuthors()}});
+        const newState = this.state.authorState;
+        newState.authorList = AuthorStore.getAllAuthors();
+        this.setState({ newState });  
+    }
+
+    _onToggleAuthorPopup(){
+        const newState = this.state.authorState;
+        newState.popUp = AuthorStore.getPopup();
+        newState.popUp.togglePopup = !newState.popUp.togglePopup;
+        this.setState({ newState });
     }
 }

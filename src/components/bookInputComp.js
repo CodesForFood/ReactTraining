@@ -67,7 +67,7 @@ class BookInputComp extends React.Component {
                         </label>
                     </div>                    
                     <button onClick={ () => this.handleSubmit() }>Submit</button>
-                    <button onClick={ () => BookActions.closePopup()}>Close me</button>
+                    <button onClick={ () => BookActions.closePopup()}>Cancle</button>
                 </div>
             </div>
         );

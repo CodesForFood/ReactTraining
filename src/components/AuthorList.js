@@ -4,6 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import AuthorActions from '../actions/authorActions';
+import AuthorInputComp from './authorInputComp';
 
 
 export class AuthorList extends React.Component {
@@ -17,7 +18,7 @@ export class AuthorList extends React.Component {
             <tr key={author.author_id}>
                 <td> {author.first_name} </td>
                 <td> {author.last_name} </td>
-                <td><button type="button" onClick={ () => AuthorActions.updateAuthorDetails(author) } >Update</button></td>
+                <td><button type="button" onClick={ () => AuthorActions.showPopup("Update",author) } >Update</button></td>
                 <td><button type="button" onClick={ () => AuthorActions.deleteAuthor(author) } >Delete</button></td>
             </tr>
         );
@@ -25,25 +26,33 @@ export class AuthorList extends React.Component {
 
     ErrorComp(authErr){  
         return (
-            <h3 style={{display: authErr.show}}>{authErr.show}</h3>
+            <h3>{authErr.msg}</h3>
         )
+    }
+
+    getNewAuthor(){
+        const author = {
+            first_name:"",
+            last_name: ""
+        }
+        return author;
     }
 
     render() {
         return(
             <div>     
                 <h1>Authors</h1>      
-                {this.ErrorComp(this.props.authErr)}
-                <button type="button" onClick={ () => AuthorActions.getNewAuthorDetails() } >Add Author</button>                      
+                {this.props.authorState.authErr.show ? this.ErrorComp(this.props.authorState.authErr) : null}
+                {this.props.authorState.popUp.togglePopup ? <AuthorInputComp popup={this.props.authorState.popUp} /> : null}          
                 <table className="table">                   
                     <thead>
                         <tr>                            
-                            <th>First Name</th>
+                            <th>First Name <button type="button" onClick={ () => AuthorActions.showPopup("Add", this.getNewAuthor) } >Add Author</button></th>
                             <th>Last Name</th>
                         </tr>
                     </thead>
                     <tbody>
-                        { this.props.authorList.map(this.createAuthorRow, this) }
+                        { this.props.authorState.authorList.map(this.createAuthorRow, this) }
                     </tbody>    
                 </table>
             </div>
@@ -53,6 +62,5 @@ export class AuthorList extends React.Component {
 }
 
 AuthorList.propTypes = {
-    authorList: PropTypes.array.isRequired,
-    authErr: PropTypes.object.isRequired
+    authorState: PropTypes.object.isRequired,
 };

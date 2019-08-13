@@ -18,20 +18,7 @@ const AuthorActions = {
                     data: err.message
                 });   
             });               
-    },
-    getNewAuthorDetails : function() {
-        const firstName = prompt("What is the Authors first name?");
-        const lastName = prompt("What is the Authors last name?");
-
-        if(firstName && lastName){
-            const newAuthor = {
-                first_name : firstName,
-                last_name: lastName
-            }
-
-            this.addAuthor(newAuthor);
-        }
-    },
+    },  
     addAuthor: function(author){
         Axios.post("http://localhost:3000/author", author)
             .then((resp) =>{
@@ -50,18 +37,6 @@ const AuthorActions = {
                     data: err.message
                 });   
             });
-    },
-    updateAuthorDetails: function(author) {
-        const firstName = prompt("What is the Authors first name?", author.first_name);
-        const lastName = prompt("What is the authors last name?", author.last_name);
-
-        const newAuthor = {
-            author_id : author.author_id,
-            first_name: firstName,
-            last_name: lastName
-        }
-
-        this.updateAuthor(newAuthor);
     },
     updateAuthor: function (author){
         Axios.put("http://localhost:3000/author", author)
@@ -96,6 +71,18 @@ const AuthorActions = {
                     });   
                 })
         }
+    },
+    closePopup: function(){
+        Dispatcher.dispatch({
+            actionType: 'close_popup',             
+        });
+    },
+    showPopup: function(method, author){
+        Dispatcher.dispatch({
+            actionType: 'show_popup',
+            method: method,
+            data: author
+        });
     }
 }
 
