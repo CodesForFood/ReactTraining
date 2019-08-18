@@ -4,9 +4,11 @@ import Axios from 'axios';
 
 //Here add all crud actions for Books
 
+const PATH = "http://localhost:3000";
+
 const BooksActions = {
     readBooks: function(){
-        Axios.get("http://localhost:3000/books")
+        Axios.get(PATH + "/books")
             .then((resp) => {
                 const bookList = resp.data;
                 Dispatcher.dispatch({
@@ -22,7 +24,7 @@ const BooksActions = {
             });               
     },
     updateBook : function(book){
-        Axios.put("http://localhost:3000/book", book)
+        Axios.put(PATH + "/book", book)
             .then(() => {                
                 if(book.author != 0 && book.author !== null){
                     this.getAuthorOfBook(book, (newBook) => {
@@ -47,7 +49,7 @@ const BooksActions = {
             });
     },
     getAuthorOfBook : function(book, callback) {
-        Axios.get('http://localhost:3000/author/' + book.author)
+        Axios.get(PATH + '/author/' + book.author)
             .then((resp) => {            
                 book.first_name = resp.data[0].first_name;
                 book.last_name = resp.data[0].last_name;
@@ -61,7 +63,7 @@ const BooksActions = {
             });
     },    
     addBook: function (book) {
-        Axios.post("http://localhost:3000/book", book)
+        Axios.post(PATH + "/book", book)
             .then(resp => {
                 //Work around since nodejs cant return the book object
                 book.book_id = resp.data.insertId;
@@ -92,7 +94,7 @@ const BooksActions = {
     deleteBook: function(book){
         var isOK = confirm("You will delete this book.");
         if(isOK){
-            Axios.delete("http://localhost:3000/book/"+ book.book_id)
+            Axios.delete(PATH + "/book/"+ book.book_id)
                 .then(() => {
                     Dispatcher.dispatch({
                         actionType: "delete_book_success",

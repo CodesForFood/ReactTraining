@@ -1,10 +1,12 @@
 import Dispatcher from '../dispatcher/appDispatcher';
 import Axios from 'axios';
 
+const PATH = "http://localhost:3000";
+
 
 const AuthorActions = {
     getAllAuthors: function(){
-        Axios.get("http://localhost:3000/authors")
+        Axios.get(PATH + "/authors")
             .then((resp) => {
                 const bookList = resp.data;
                 Dispatcher.dispatch({
@@ -20,7 +22,7 @@ const AuthorActions = {
             });               
     },  
     addAuthor: function(author){
-        Axios.post("http://localhost:3000/author", author)
+        Axios.post(PATH + "/author", author)
             .then((resp) =>{
                  //Work around since nodejs cant return the book object
                  author.author_id = resp.data.insertId;
@@ -39,7 +41,7 @@ const AuthorActions = {
             });
     },
     updateAuthor: function (author){
-        Axios.put("http://localhost:3000/author", author)
+        Axios.put(PATH + "/author", author)
             .then(() =>{
                 Dispatcher.dispatch({
                     actionType: "update_author_success",
@@ -57,7 +59,7 @@ const AuthorActions = {
         const isOk = confirm("Are you sure you want to delete this author?");
 
         if(isOk){
-            Axios.delete("http://localhost:3000/author/" + author.author_id)
+            Axios.delete(PATH + "/author/" + author.author_id)
                 .then(() => {                  
                     Dispatcher.dispatch({
                         actionType: "delete_author_success",
