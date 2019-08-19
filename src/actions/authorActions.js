@@ -1,7 +1,7 @@
 import Dispatcher from '../dispatcher/appDispatcher';
 import Axios from 'axios';
 
-const PATH = "http://localhost:3000";
+const PATH = "http://3.16.154.176:3000";
 
 
 const AuthorActions = {
